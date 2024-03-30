@@ -1,0 +1,16 @@
+/clone
+/elmone
+/frontend/extension/next-chrome-starter/.DS_Store
+/frontend/extension/next-chrome-starter/.next
+/frontend/extension/next-chrome-starter/node_modules
+/frontend/extension/next-chrome-starter/.env
+
+/frontend/website/node_modules
+/frontend/website/website-phishing-detection/.DS_Store
+/frontend/website/website-phishing-detection/.next
+/frontend/website/website-phishing-detection/node_modules
+/frontend/website/website-phishing-detection/.env
+
+/env
+
+/__pycache__
