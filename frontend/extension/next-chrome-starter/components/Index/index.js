@@ -1,50 +1,140 @@
 import styles from '../../styles/Pages.module.css';
 import { useUrl } from 'nextjs-current-url';
 import { useEffect, useState } from 'react';
+// import chrome from 'chrome';
+
 
 export default function Index({ navigateToPage }) {
-  const { href: currentUrl, pathname } = useUrl()??{};
-  const [isLoading, setIsLoading] = useState(true);
-  const [result, setResult] = useState(null);
+  async function getCurrentTab() {
+    let queryOptions = { active: true, currentWindow: true };
+    var browser;
+    if (typeof browser == "undefined") {
+      browser = chrome;
+    }
+      let [tab] = await browser.tabs.query(queryOptions);
+      // localStorage.setItem('tabname' , tab);
+      return tab;
+    // }
+  }
+  const [link, setLink] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [result, setResult] = useState(0);
+
+  // const check = () => {
+  //   setIsLoading(true);
+  //   fetch('http://localhost:5000/predict', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify({ url: link })
+  //       })
+  //       .then((response) => response.json())
+  //       .then((json) => setResult(json))
+  //       .then(() => console.log(result))
+  //       .catch((error) => console.error(error))
+  //       .finally(() => setIsLoading(false));
+  //     setIsLoading(false);
+  // }
+
+  // useEffect(() => {
+  //   if (isLoading) {
+        
+  //     // getCurrentTab()
+  //     // .then((data) => { setLink(data); })
+  //     // .then(() => { console.log('error')});
+  //     fetch('http://localhost:5000/predict', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify({ url: link })
+  //       })
+  //       .then((response) => response.json())
+  //       .then((json) => setResult(json))
+  //       .then(() => console.log(result))
+  //       .catch((error) => console.error(error))
+  //       .finally(() => setIsLoading(false));
+  //     setIsLoading(false);
+  //   }
+  // }
+  // , [isLoading, link]);
+
   useEffect(() => {
-    if (isLoading) {
-      fetch('http://127.0.0.1:5000/predict', {
+    // 1
+    chrome.tabs &&
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        // 2
+        const url = tabs[0].url
+        const title = tabs[0].title
+        // 3
+        setLink(url);
+        fetch('http://localhost:5000/predict', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           },
-          body: JSON.stringify({url: currentUrl})
+          body: JSON.stringify({ url: url })
         })
         .then((response) => response.json())
-        .then((json) => setResult(json))
-        .then(() => console.log(result))
+        .then((data) => setResult(data.result))
         .catch((error) => console.error(error))
         .finally(() => setIsLoading(false));
       setIsLoading(false);
-    }
+      })
+      
+
+  }, [] );
+  const resultoutput = (result) => {
+    return (
+      <div>
+        <h5>Result: {result === -1? "PHISHING SITE DETECTED":result === 1? "YOU ARE SAFE":null}</h5>
+      </div>
+    );
   }
-  , [isLoading]);
-  if(isLoading){
+  if(isLoading && result===0){
     return <div>Loading...</div>
-  }
+  }else{
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-        <h1 className={styles.title}>NEXT-CHROME-STARTER</h1>
+        <h1 className={styles.title}>Phishing Detection</h1>
         <p className={styles.description}>
-          {currentUrl}
+          <h5>Current Url: "{link}"</h5>
           <br />
-          {pathname}
+          {/* <h5>Pathname: "{pathname}"</h5> */}
           <br />
-          {result?.result}
+          {/* {result} */}
           <br />
-          This is an example of a Browser Extension built with NEXT.JS. Please
-          refer to the GitHub repo for running instructions and documentation
         </p>
-        <h1 className={styles.code}>Index Page ./components/Index/index.js</h1>
-        <p>{"[ - This is Index page content - ]"}</p>
-        <p onClick={() => navigateToPage('new')}>{"Go to New Page >"}</p>
+        {/* <button
+          onClick={check}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+        >
+          Check
+        </button> */}
+
+        <div>
+          {resultoutput(result)}
+        </div>
       </main>
     </div>
   );
+  }
 }
+
+
+
+
+
+// {
+//   "content_scripts": [
+//     {
+//       "js": ["scripts/content.js"],
+//       "matches": [
+//         "https://developer.chrome.com/docs/extensions/*",
+//         "https://developer.chrome.com/docs/webstore/*"
+//       ]
+//     }
+//   ]
+// }

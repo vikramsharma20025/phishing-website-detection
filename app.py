@@ -23,10 +23,12 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 #     return render_template("index.html")
 
 def check_fraud(url):
+    print("url",url)
     features = fe.extract_features(url)
     print(features)
 
-    to_predict_list = [12344]+features
+    to_predict_list = features
+    # [12344]+
 
     # to_predict_list = [12344,-1,1,1,1,-1,-1,-1,-1,-1,1,1,-1,1,-1,1,-1,-1,-1,0,1,1,1,1,-1,-1,-1,-1,1,1,-1]
     loaded_model = joblib.load("modelfreshvikram")
