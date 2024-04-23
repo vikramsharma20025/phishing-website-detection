@@ -19,47 +19,6 @@ export default function Index({ navigateToPage }) {
   const [link, setLink] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState(0);
-
-  // const check = () => {
-  //   setIsLoading(true);
-  //   fetch('http://localhost:5000/predict', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify({ url: link })
-  //       })
-  //       .then((response) => response.json())
-  //       .then((json) => setResult(json))
-  //       .then(() => console.log(result))
-  //       .catch((error) => console.error(error))
-  //       .finally(() => setIsLoading(false));
-  //     setIsLoading(false);
-  // }
-
-  // useEffect(() => {
-  //   if (isLoading) {
-        
-  //     // getCurrentTab()
-  //     // .then((data) => { setLink(data); })
-  //     // .then(() => { console.log('error')});
-  //     fetch('http://localhost:5000/predict', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify({ url: link })
-  //       })
-  //       .then((response) => response.json())
-  //       .then((json) => setResult(json))
-  //       .then(() => console.log(result))
-  //       .catch((error) => console.error(error))
-  //       .finally(() => setIsLoading(false));
-  //     setIsLoading(false);
-  //   }
-  // }
-  // , [isLoading, link]);
-
   useEffect(() => {
     // 1
     chrome.tabs &&
